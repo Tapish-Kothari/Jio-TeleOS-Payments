@@ -36,109 +36,115 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-screen bg-background text-foreground flex flex-col overflow-hidden relative">
+    <div className="fixed inset-0 w-full bg-background text-foreground flex flex-col overflow-hidden">
       {/* Background Ambience */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full mix-blend-screen" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[40%] h-[50%] bg-blue-600/10 blur-[100px] rounded-full mix-blend-screen" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
-      {/* Header / Tabs */}
-      <header className="z-10 p-6 flex flex-col items-center gap-6">
-        <div className="text-center space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight text-white/90">Jio TeleOS</h1>
-          <p className="text-primary text-sm uppercase tracking-[0.2em] font-mono">Payments Demo</p>
-        </div>
+      <div className="relative z-10 flex flex-col h-full w-full">
+        {/* Header / Tabs */}
+        <header className="p-2 sm:p-4 shrink-0 flex flex-col items-center gap-2 sm:gap-4">
+          <div className="text-center space-y-1">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90">Jio TeleOS</h1>
+            <p className="text-primary text-xs sm:text-sm uppercase tracking-[0.2em] font-mono">Payments Demo</p>
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto">
-          {SCENARIOS.map(scenario => {
-            const IconComponent = (Icons as any)[scenario.icon] || Icons.Circle;
-            const isActive = activeScenarioId === scenario.id;
-            
-            return (
-              <button
-                key={scenario.id}
-                onClick={() => setActiveScenarioId(scenario.id)}
-                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
-                  ${isActive 
-                    ? 'bg-primary/20 text-primary border border-primary/50 shadow-[0_0_15px_rgba(0,230,255,0.2)]' 
-                    : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white/90'}
-                `}
-              >
-                <IconComponent size={16} />
-                {scenario.title}
-              </button>
-            );
-          })}
-        </div>
-      </header>
+          <div className="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto">
+            {SCENARIOS.map(scenario => {
+              const IconComponent = (Icons as any)[scenario.icon] || Icons.Circle;
+              const isActive = activeScenarioId === scenario.id;
+              
+              return (
+                <button
+                  key={scenario.id}
+                  onClick={() => setActiveScenarioId(scenario.id)}
+                  className={`
+                    flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-medium transition-all duration-300
+                    ${isActive 
+                      ? 'bg-primary/20 text-primary border border-primary/50 shadow-[0_0_15px_rgba(0,230,255,0.2)]' 
+                      : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white/90'}
+                  `}
+                >
+                  <IconComponent size={14} className="sm:w-4 sm:h-4" />
+                  {scenario.title}
+                </button>
+              );
+            })}
+          </div>
+        </header>
 
-      {/* Main Stage */}
-      <main className="flex-1 flex items-center justify-center relative z-10 p-8 perspective-[1000px]">
-        <div className="flex items-center gap-12 max-w-7xl w-full justify-center transform-style-3d">
+        {/* Main Stage */}
+        <main className="flex-1 relative w-full min-h-0 overflow-hidden perspective-[1000px]">
+          <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4">
+            <div className="flex flex-col xl:flex-row items-center gap-4 xl:gap-12 w-full justify-center transform-style-3d scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] 2xl:scale-[0.9] origin-center">
+              
+              {/* TV Mockup */}
+              <div className="relative z-10 w-full max-w-[800px] aspect-video shrink-0">
+                <TVFrame 
+                  step={currentStep} 
+                  scenarioTitle={activeScenario.title}
+                  onClick={handleTVClick} 
+                />
+              </div>
+
+              {/* Connection Arc */}
+              <div className="relative z-0 w-full xl:w-32 h-16 xl:h-auto shrink-0 flex justify-center items-center rotate-90 xl:rotate-0">
+                 <ConnectionArc active={currentStep.handoffActive || false} />
+              </div>
+
+              {/* Phone Mockup */}
+              <div className="relative z-10 w-[280px] sm:w-[300px] h-[560px] sm:h-[600px] shrink-0">
+                <PhoneFrame step={currentStep} />
+              </div>
+
+            </div>
+          </div>
+        </main>
+
+        {/* Controls Footer */}
+        <footer className="p-4 shrink-0 flex flex-col items-center gap-3 mt-auto mb-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {activeScenario.steps.map((_, idx) => (
+              <div 
+                key={idx} 
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-500 ${
+                  idx === currentStepIndex 
+                    ? 'w-6 sm:w-8 bg-primary shadow-[0_0_10px_rgba(0,230,255,0.5)]' 
+                    : idx < currentStepIndex
+                      ? 'w-1.5 sm:w-2 bg-primary/40'
+                      : 'w-1.5 sm:w-2 bg-white/20'
+                }`}
+              />
+            ))}
+          </div>
           
-          {/* TV Mockup */}
-          <div className="relative z-10 w-[800px] aspect-video shrink-0">
-            <TVFrame 
-              step={currentStep} 
-              scenarioTitle={activeScenario.title}
-              onClick={handleTVClick} 
-            />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+              onClick={handlePrev}
+              disabled={currentStepIndex === 0}
+            >
+              <Icons.ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> Previous
+            </Button>
+            <div className="text-xs sm:text-sm font-mono text-white/50 w-20 sm:w-24 text-center">
+              Step {currentStepIndex + 1} / {activeScenario.steps.length}
+            </div>
+            <Button 
+              size="sm"
+              className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-background transition-all duration-300"
+              onClick={handleNext}
+              disabled={currentStepIndex === activeScenario.steps.length - 1}
+            >
+              Next <Icons.ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
+            </Button>
           </div>
-
-          {/* Connection Arc */}
-          <div className="relative z-0 w-32 shrink-0 flex justify-center items-center">
-             <ConnectionArc active={currentStep.handoffActive || false} />
-          </div>
-
-          {/* Phone Mockup */}
-          <div className="relative z-10 w-[300px] h-[600px] shrink-0">
-            <PhoneFrame step={currentStep} />
-          </div>
-
-        </div>
-      </main>
-
-      {/* Controls Footer */}
-      <footer className="z-10 p-6 flex flex-col items-center gap-4 bg-gradient-to-t from-background to-transparent">
-        <div className="flex items-center gap-3">
-          {activeScenario.steps.map((_, idx) => (
-            <div 
-              key={idx} 
-              className={`h-2 rounded-full transition-all duration-500 ${
-                idx === currentStepIndex 
-                  ? 'w-8 bg-primary shadow-[0_0_10px_rgba(0,230,255,0.5)]' 
-                  : idx < currentStepIndex
-                    ? 'w-2 bg-primary/40'
-                    : 'w-2 bg-white/20'
-              }`}
-            />
-          ))}
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            className="border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-            onClick={handlePrev}
-            disabled={currentStepIndex === 0}
-          >
-            <Icons.ChevronLeft className="w-4 h-4 mr-2" /> Previous
-          </Button>
-          <div className="text-sm font-mono text-white/50 w-24 text-center">
-            Step {currentStepIndex + 1} / {activeScenario.steps.length}
-          </div>
-          <Button 
-            className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-background transition-all duration-300"
-            onClick={handleNext}
-            disabled={currentStepIndex === activeScenario.steps.length - 1}
-          >
-            Next <Icons.ChevronRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
