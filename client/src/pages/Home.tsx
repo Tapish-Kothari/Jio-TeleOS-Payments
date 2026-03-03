@@ -78,11 +78,11 @@ export default function Home() {
 
         {/* Main Stage */}
         <main className="flex-1 relative w-full min-h-0 overflow-hidden perspective-[1000px]">
-          <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4">
-            <div className="flex flex-col xl:flex-row items-center gap-4 xl:gap-12 w-full justify-center transform-style-3d scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.7] xl:scale-[0.8] 2xl:scale-[0.9] origin-center">
+          <div className="absolute inset-0 flex items-center justify-center p-4 lg:p-8">
+            <div className="flex flex-col xl:flex-row items-center gap-6 xl:gap-8 2xl:gap-12 w-full max-w-[2400px] h-full justify-center">
               
               {/* TV Mockup */}
-              <div className="relative z-10 w-full max-w-[800px] aspect-video shrink-0">
+              <div className="relative z-10 w-full md:w-auto md:h-[60vh] lg:h-[65vh] xl:h-[70vh] 2xl:h-[75vh] aspect-video shrink-0 max-w-full">
                 <TVFrame 
                   step={currentStep} 
                   scenarioTitle={activeScenario.title}
@@ -91,12 +91,12 @@ export default function Home() {
               </div>
 
               {/* Connection Arc */}
-              <div className="relative z-0 w-full xl:w-32 h-16 xl:h-auto shrink-0 flex justify-center items-center rotate-90 xl:rotate-0">
+              <div className="relative z-0 w-12 xl:w-16 2xl:w-20 shrink-0 flex justify-center items-center rotate-90 xl:rotate-0 hidden md:flex">
                  <ConnectionArc active={currentStep.handoffActive || false} />
               </div>
 
               {/* Phone Mockup */}
-              <div className="relative z-10 w-[280px] sm:w-[300px] h-[560px] sm:h-[600px] shrink-0">
+              <div className="relative z-10 w-[260px] h-[520px] sm:w-[280px] sm:h-[560px] xl:w-[300px] xl:h-[600px] 2xl:w-[320px] 2xl:h-[640px] shrink-0">
                 <PhoneFrame step={currentStep} />
               </div>
 

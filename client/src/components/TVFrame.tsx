@@ -46,17 +46,17 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
       <div className="relative z-10 w-full h-full p-12 flex flex-col justify-between">
         
         {/* Top Bar */}
-        <header className="flex justify-between items-center opacity-80">
-          <div className="text-xl font-bold tracking-wider text-white">TeleOS</div>
-          <div className="flex gap-4 items-center text-sm">
-            <User className="w-5 h-5" /> Profile 1
-            <div className="w-px h-4 bg-white/30 mx-2" />
+        <header className="flex justify-between items-center opacity-80 pt-4 px-8">
+          <div className="text-3xl font-bold tracking-wider text-white">TeleOS</div>
+          <div className="flex gap-4 items-center text-xl">
+            <User className="w-8 h-8" /> Profile 1
+            <div className="w-px h-6 bg-white/30 mx-2" />
             10:42 PM
           </div>
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex items-center justify-center">
+        <main className="flex-1 flex items-center justify-center p-8 mt-16 pb-16">
           <AnimatePresence mode="wait">
             
             {/* CONTENT PLAYING STATE */}
@@ -280,28 +280,32 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
                 key="recharge"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-4xl flex flex-col gap-8 items-center text-center"
+                className="w-full max-w-5xl flex flex-col gap-10 items-center text-center mt-8"
                >
-                 <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
-                 <p className="text-xl text-white/60 mb-4">{tvContent?.subtitle}</p>
+                 <div className="space-y-4">
+                   <h2 className="text-5xl font-bold text-white tracking-wide">{tvContent?.title}</h2>
+                   <p className="text-2xl text-white/60">{tvContent?.subtitle}</p>
+                 </div>
                  
-                 <div className="flex gap-6">
+                 <div className="flex gap-6 mt-4">
                    {[
                      { name: 'Mom', num: '+91 98765 43210', active: true },
                      { name: 'Dad', num: '+91 87654 32109', active: false },
                      { name: 'Self', num: '+91 76543 21098', active: false }
                    ].map((contact, i) => (
-                     <div key={i} className={`p-8 rounded-2xl border flex flex-col items-center gap-4 cursor-pointer transition-all ${
+                     <div key={i} className={`p-10 w-[280px] rounded-3xl flex flex-col items-center gap-6 cursor-pointer transition-all ${
                        contact.active 
-                        ? 'bg-primary/20 border-primary scale-105' 
-                        : 'glass-panel border-white/10 hover:bg-white/10'
+                        ? 'bg-gradient-to-b from-primary/20 to-transparent border-2 border-primary scale-105 shadow-[0_0_30px_rgba(0,230,255,0.15)]' 
+                        : 'bg-[#181C2A] border-2 border-transparent hover:bg-[#1E2335]'
                      }`}>
-                       <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-2xl font-bold">
+                       <div className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-white ${
+                         contact.active ? 'bg-white/20' : 'bg-[#2A2E3D]'
+                       }`}>
                          {contact.name[0]}
                        </div>
-                       <div>
-                         <div className="text-xl font-medium text-white">{contact.name}</div>
-                         <div className="text-white/50 font-mono mt-1">{contact.num}</div>
+                       <div className="space-y-2">
+                         <div className="text-2xl font-semibold text-white">{contact.name}</div>
+                         <div className="text-white/50 text-lg font-mono">{contact.num}</div>
                        </div>
                      </div>
                    ))}
