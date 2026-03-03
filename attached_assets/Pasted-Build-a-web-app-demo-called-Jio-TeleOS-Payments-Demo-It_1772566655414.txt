@@ -1,0 +1,67 @@
+Build a web app demo called "Jio TeleOS — Payments Demo". It's a two-panel interactive prototype showing how payments work on a smart TV OS.                                                   
+                                                                                                                                                                                                 
+  Layout:                                                                                                                                                                                        
+  - Full viewport, dark background                                                                                                                                                               
+  - Top: a row of scenario tabs (clickable, one active at a time)                                                                                                                                
+  - Center: two device mockups side by side — a widescreen TV frame on the left and a portrait phone frame on the right, connected by an animated arc that glows when a handoff is happening     
+  between the two devices                                   
+  - Bottom: step indicator dots and back/next buttons
+
+  Interaction:
+  - Clicking on the TV screen advances the demo step
+  - The phone reacts automatically based on the current step
+  - Each scenario is independent — clicking a tab resets to step 1 of that scenario
+
+  Scenarios to include (each with 4–6 steps):
+  1. 🏏 IPL Live Gate — cricket match goes PPV mid-stream, user pays ₹49 to continue watching
+  2. 🎬 OTT Subscription — user hits a paywall, selects annual plan, pays via UPI QR
+  3. 🎮 Gaming Top-up — in-game purchase triggers low wallet warning, user tops up JioPay via QR
+  4. 👨‍👩‍👧 Family Auth — child initiates purchase, parent gets approval request on their phone, approves it
+  5. 🛒 T-Commerce — shoppable ad appears mid-show, user buys product from JioMart without leaving content
+  6. 🎵 JioSaavn Premium — music subscription paywall and QR checkout
+  7. 📋 Subscription Hub — view all active subscriptions, cancel flow with win-back offer
+  8. 📱 Mobile Recharge — recharge a family member's Jio number from the TV
+
+  TV screen content: Each step should show a realistic TV OS UI — dark cinematic backgrounds, glassmorphism overlay cards, large bold text, payment method selection (JioPay wallet, UPI QR,
+  saved card), QR code screen, waiting/spinner state, and success state.
+
+  Phone screen content: Idle/lock screen, push notification for payment request, UPI PIN entry screen, payment success screen. For family auth: approval card with Approve/Deny buttons.
+
+  Stack: React + Tailwind CSS + Framer Motion for transitions. No backend needed — all frontend state.
+
+  Design: Dark theme (#060914 background), electric blue accent, cinematic feel. TV screens should look like a real TV OS (think Netflix/Prime UI), not a mobile app on a big screen. Phone
+  screens should look like a real Android phone.
+
+
+❯ Don't be specific around designs / colors etc.                                                                                                                                                 
+                                                                                                                                  
+⏺ Build a web app demo called "Jio TeleOS — Payments Demo". It's a two-panel interactive prototype showing how payments work on a smart TV OS.                                                   
+                                                                                                                                                                                                 
+  Layout:
+  - Full viewport, dark theme                                                                                                                                                                    
+  - Top: a row of scenario tabs, one active at a time       
+  - Center: two device mockups side by side — a widescreen TV frame on the left and a portrait phone frame on the right, with a visual connection between them that animates when a handoff is   
+  happening between devices                                 
+  - Bottom: step indicator dots and prev/next buttons
+
+  Interaction:
+  - Clicking on the TV screen advances the demo step
+  - The phone updates automatically based on the current step
+  - Each scenario is independent — switching tabs resets to step 1
+
+  Scenarios to include (each with 4–6 steps):
+  1. 🏏 IPL Live Gate — cricket match goes PPV mid-stream, user pays ₹49 to continue watching
+  2. 🎬 OTT Subscription — user hits a paywall, selects a plan, pays via UPI QR
+  3. 🎮 Gaming Top-up — in-game purchase triggers low wallet warning, user tops up via QR on phone
+  4. 👨‍👩‍👧 Family Auth — child initiates a purchase on TV, parent gets approval request on phone, approves it
+  5. 🛒 T-Commerce — shoppable ad appears mid-show, user buys a product from JioMart without leaving content
+  6. 🎵 JioSaavn Premium — music subscription paywall and checkout
+  7. 📋 Subscription Hub — view all active subscriptions, cancel flow with a win-back offer
+  8. 📱 Mobile Recharge — recharge a family member's Jio number directly from the TV
+
+  TV screen content per step: realistic TV OS UI — content playing, paywall overlay, payment method selection (JioPay wallet, UPI QR, saved card), QR code screen, waiting/confirmation state,
+  success state.
+
+  Phone screen content per step: idle, push notification for payment request, UPI PIN entry, success confirmation. For family auth: approval card with Approve/Deny.
+
+  Stack: React + Tailwind + Framer Motion. No backend — pure frontend state machine.
