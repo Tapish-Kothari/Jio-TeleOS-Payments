@@ -23,11 +23,11 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
 
   return (
     <div 
-      className="w-full h-full rounded-[24px] overflow-hidden bg-black border-4 border-[#222] shadow-2xl relative cursor-pointer group"
+      className="w-full h-full rounded-[24px] overflow-hidden bg-black border-[8px] border-[#1a1a1a] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative cursor-pointer group"
       onClick={onClick}
     >
       {/* TV Bezel Reflection */}
-      <div className="absolute inset-0 rounded-[20px] pointer-events-none border border-white/10 z-50"></div>
+      <div className="absolute inset-0 rounded-[16px] pointer-events-none border border-white/5 z-50"></div>
       
       {/* Dynamic Background */}
       <div className="absolute inset-0 z-0">

@@ -77,30 +77,38 @@ export default function Home() {
         </header>
 
         {/* Main Stage */}
-        <main className="flex-1 relative w-full min-h-0 overflow-hidden perspective-[1000px]">
-          <div className="absolute inset-0 flex items-center justify-center p-4 lg:p-8">
-            <div className="flex flex-col xl:flex-row items-center gap-6 xl:gap-8 2xl:gap-12 w-full max-w-[2400px] h-full justify-center">
-              
-              {/* TV Mockup */}
-              <div className="relative z-10 w-full md:w-auto md:h-[60vh] lg:h-[65vh] xl:h-[70vh] 2xl:h-[75vh] aspect-video shrink-0 max-w-full">
+        <main className="flex-1 relative w-full min-h-0 overflow-hidden flex items-center justify-center p-8 sm:p-12 md:p-16 lg:p-20 xl:p-24 2xl:p-32">
+          <div className="flex flex-col xl:flex-row items-center justify-center gap-10 lg:gap-16 w-full max-w-[1500px] 2xl:max-w-[1800px] mx-auto h-full">
+            
+            {/* TV Mockup */}
+            <div 
+              className="relative z-10 w-full max-w-[700px] xl:max-w-[850px] 2xl:max-w-[1000px] aspect-video shrink shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-2xl md:rounded-[32px] overflow-hidden bg-black"
+              style={{ containerType: 'inline-size' }}
+            >
+              <div className="w-[1600px] h-[900px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(calc(100cqw / 1600))' }}>
                 <TVFrame 
                   step={currentStep} 
                   scenarioTitle={activeScenario.title}
                   onClick={handleTVClick} 
                 />
               </div>
+            </div>
 
-              {/* Connection Arc */}
-              <div className="relative z-0 w-12 xl:w-16 2xl:w-20 shrink-0 flex justify-center items-center rotate-90 xl:rotate-0 hidden md:flex">
-                 <ConnectionArc active={currentStep.handoffActive || false} />
-              </div>
+            {/* Connection Arc */}
+            <div className="relative z-0 w-12 sm:w-16 xl:w-20 shrink-0 flex justify-center items-center rotate-90 xl:rotate-0 hidden md:flex opacity-60">
+               <ConnectionArc active={currentStep.handoffActive || false} />
+            </div>
 
-              {/* Phone Mockup */}
-              <div className="relative z-10 w-[260px] h-[520px] sm:w-[280px] sm:h-[560px] xl:w-[300px] xl:h-[600px] 2xl:w-[320px] 2xl:h-[640px] shrink-0">
+            {/* Phone Mockup */}
+            <div 
+              className="relative z-10 w-[240px] xl:w-[280px] 2xl:w-[320px] aspect-[1/2.1] shrink-0 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2rem] 2xl:rounded-[3rem] overflow-hidden bg-black"
+              style={{ containerType: 'inline-size' }}
+            >
+              <div className="w-[400px] h-[840px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(calc(100cqw / 400))' }}>
                 <PhoneFrame step={currentStep} />
               </div>
-
             </div>
+
           </div>
         </main>
 
