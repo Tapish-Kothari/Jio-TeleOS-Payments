@@ -54,7 +54,6 @@ export function metaImagesPlugin(): Plugin {
     },
   };
 }
-
 function getDeploymentUrl(): string | null {
   if (process.env.REPLIT_INTERNAL_APP_DOMAIN) {
     const url = `https://${process.env.REPLIT_INTERNAL_APP_DOMAIN}`;
