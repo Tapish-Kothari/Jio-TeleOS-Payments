@@ -225,7 +225,7 @@ export default function Home() {
 
             {/* Connection Arc */}
             <div className="relative z-0 w-12 sm:w-16 xl:w-20 shrink-0 flex justify-center items-center rotate-90 xl:rotate-0 hidden md:flex opacity-60">
-               <ConnectionArc active={displayStep.handoffActive || false} />
+              <ConnectionArc active={displayStep.handoffActive || false} />
             </div>
 
             {/* Phone Mockup */}
@@ -261,13 +261,12 @@ export default function Home() {
             {currentSteps.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-1.5 sm:h-2 rounded-full transition-all duration-500 ${
-                  idx === currentStepIndex
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-500 ${idx === currentStepIndex
                     ? 'w-6 sm:w-8 bg-primary shadow-[0_0_10px_rgba(0,230,255,0.5)]'
                     : idx < currentStepIndex
                       ? 'w-1.5 sm:w-2 bg-primary/40'
                       : 'w-1.5 sm:w-2 bg-white/20'
-                }`}
+                  }`}
               />
             ))}
           </div>
@@ -295,6 +294,16 @@ export default function Home() {
             </Button>
           </div>
         </footer>
+
+        {/* Creator Mark */}
+        <a
+          href="https://tapishkothari.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 text-[10px] sm:text-xs font-mono text-white/30 hover:text-white/80 transition-colors z-50 flex items-center gap-1"
+        >
+          Created by <span className="underline underline-offset-2">Tapish Kothari</span>
+        </a>
       </div>
     </div>
   );
