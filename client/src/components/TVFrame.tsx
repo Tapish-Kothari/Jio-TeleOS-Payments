@@ -1,14 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/lib/scenarios';
-import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2 } from 'lucide-react';
+import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2, Plus } from 'lucide-react';
 
 interface TVFrameProps {
   step: Step;
   scenarioTitle: string;
   onClick: () => void;
+  onMethodSelect?: (method: string) => void;
+  selectedMethod?: string;
 }
 
-export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) {
+export default function TVFrame({ step, scenarioTitle, onClick, onMethodSelect, selectedMethod = 'upi' }: TVFrameProps) {
   const { tvState, tvContent } = step;
 
   // Background image placeholder based on scenario
@@ -122,26 +124,156 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
                   )}
                 </div>
                 
-                <div className="flex-1 max-w-md flex flex-col gap-4">
+                <div className="flex-1 max-w-md flex flex-col gap-3">
                   {[
-                    { icon: QrCode, label: 'UPI / Scan QR', active: true },
-                    { icon: Wallet, label: 'JioPay Wallet', active: false },
-                    { icon: CreditCard, label: 'Saved Card (...4242)', active: false },
-                  ].map((method, i) => (
-                    <div 
-                      key={i}
-                      className={`p-6 rounded-xl flex items-center gap-4 border transition-all ${
-                        method.active 
-                          ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(0,230,255,0.2)]' 
-                          : 'glass-panel border-white/10 hover:bg-white/10'
-                      }`}
-                    >
-                      <method.icon className={method.active ? 'text-primary' : 'text-white/70'} size={28} />
-                      <span className={`text-xl ${method.active ? 'text-white font-semibold' : 'text-white/80'}`}>
-                        {method.label}
-                      </span>
+                    { id: 'upi', icon: QrCode, label: 'UPI / Scan QR' },
+                    { id: 'wallet', icon: Wallet, label: 'JioPay Wallet' },
+                    { id: 'postpaid', icon: Smartphone, label: 'Jio Postpaid Billing' },
+                    { id: 'saved_card', icon: CreditCard, label: 'Saved Card (...4242)' },
+                    { id: 'new_card', icon: Plus, label: 'Add New Card' },
+                  ].map((method) => {
+                    const isActive = selectedMethod === method.id;
+                    return (
+                      <div 
+                        key={method.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onMethodSelect) onMethodSelect(method.id);
+                        }}
+                        className={`p-4 rounded-xl flex items-center gap-4 border transition-all cursor-pointer ${
+                          isActive 
+                            ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(0,230,255,0.2)] scale-105 ml-4' 
+                            : 'glass-panel border-white/10 hover:bg-white/10'
+                        }`}
+                      >
+                        <method.icon className={isActive ? 'text-primary' : 'text-white/70'} size={24} />
+                        <span className={`text-lg ${isActive ? 'text-white font-semibold' : 'text-white/80'}`}>
+                          {method.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {/* WALLET CONFIRM STATE */}
+            {tvState === 'wallet_confirm' && (
+              <motion.div 
+                key="wallet"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="glass-card rounded-2xl p-10 max-w-2xl w-full flex flex-col gap-6 items-center text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 mb-2">
+                  <Wallet size={32} />
+                </div>
+                <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                <p className="text-xl text-white/70">{tvContent?.subtitle}</p>
+                
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4 my-2 flex items-center gap-4">
+                   <div className="text-white/60">Current Balance:</div>
+                   <div className="text-2xl font-mono text-green-400">{tvContent?.price?.split(': ')[1] || '₹1,500'}</div>
+                </div>
+                
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-2" />
+                
+                <button className="bg-primary text-black font-bold text-xl py-4 px-12 rounded-full hover:scale-105 transition-transform flex items-center gap-3">
+                  Confirm Payment
+                </button>
+              </motion.div>
+            )}
+
+            {/* POSTPAID CONFIRM STATE */}
+            {tvState === 'postpaid_confirm' && (
+              <motion.div 
+                key="postpaid"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="glass-card rounded-2xl p-10 max-w-2xl w-full flex flex-col gap-6 items-center text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 mb-2">
+                  <Smartphone size={32} />
+                </div>
+                <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                <p className="text-xl text-white/70">{tvContent?.subtitle}</p>
+                
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4 my-2 text-white/80">
+                   This amount will be added to your next billing cycle.
+                </div>
+                
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-2" />
+                
+                <button className="bg-primary text-black font-bold text-xl py-4 px-12 rounded-full hover:scale-105 transition-transform flex items-center gap-3">
+                  Confirm & Add to Bill
+                </button>
+              </motion.div>
+            )}
+
+            {/* SAVED CARD CONFIRM STATE */}
+            {tvState === 'saved_card_confirm' && (
+              <motion.div 
+                key="saved_card"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="glass-card rounded-2xl p-10 max-w-2xl w-full flex flex-col gap-6 items-center text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-[#0047AB]/20 flex items-center justify-center text-[#00E6FF] mb-2 border border-[#0047AB]/50">
+                  <CreditCard size={32} />
+                </div>
+                <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                <p className="text-xl text-white/70">{tvContent?.subtitle}</p>
+                
+                <div className="flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 mt-4">
+                  <Smartphone className="text-primary w-8 h-8" />
+                  <div className="text-left">
+                    <div className="text-white font-medium">OTP Sent to Mobile</div>
+                    <div className="text-white/50 text-sm">Check your phone to authorize payment</div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+            
+            {/* QR CODE NEW CARD STATE */}
+            {tvState === 'qr_code_new_card' && (
+              <motion.div 
+                key="qrcode_new"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, filter: 'blur(10px)' }}
+                className="glass-card rounded-2xl p-12 max-w-3xl w-full flex gap-12 items-center"
+              >
+                <div className="bg-white p-4 rounded-xl flex-shrink-0 relative">
+                  <div className="w-48 h-48 bg-black/5 flex items-center justify-center border-4 border-dashed border-black/20 rounded-lg">
+                    {/* Simulated QR Pattern */}
+                    <div className="grid grid-cols-4 grid-rows-4 gap-1 w-full h-full p-2">
+                      {Array.from({length: 16}).map((_, i) => (
+                        <div key={i} className={`bg-[#0047AB] rounded-sm ${Math.random() > 0.5 ? 'opacity-100' : 'opacity-20'}`} />
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  {/* Scanner laser animation */}
+                  <motion.div 
+                    className="absolute left-0 right-0 h-1 bg-[#00E6FF]/80 shadow-[0_0_10px_#00E6FF]"
+                    animate={{ top: ['10%', '90%', '10%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                  />
+                </div>
+                
+                <div className="flex-1">
+                  <h2 className="text-4xl font-bold text-white mb-4">{tvContent?.title}</h2>
+                  <p className="text-xl text-white/70 mb-8">{tvContent?.subtitle}</p>
+                  
+                  <div className="flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10">
+                    <CreditCard className="text-primary w-8 h-8" />
+                    <div>
+                      <div className="text-white font-medium">Secure Card Addition</div>
+                      <div className="text-white/50 text-sm">Card details will be tokenized and saved</div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}

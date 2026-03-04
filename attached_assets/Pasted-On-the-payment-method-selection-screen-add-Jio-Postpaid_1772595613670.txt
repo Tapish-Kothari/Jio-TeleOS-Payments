@@ -1,0 +1,20 @@
+On the payment method selection screen, add Jio Postpaid Billing as a fourth option alongside UPI / Scan QR, JioPay Wallet, and Saved Card.                  
+                                                                                                                                                               
+  Make all four payment methods fully functional with their own distinct flows:                                                                                
+                                                                                                                                                               
+  JioPay Wallet — TV shows wallet balance and a confirmation screen ("Pay ₹X from JioPay Wallet?"). One tap confirms. Instant success on TV. No phone          
+  interaction, no QR, no handoff arc — the wallet is pre-authenticated on the account.                                                                         
+                                                                                                                                                             
+  Jio Postpaid Billing — TV shows a confirmation screen ("Add ₹X to your Jio bill?"). One tap confirms. Instant success on TV with a note that it will appear
+  on the next Jio bill. No phone interaction needed, no handoff arc.
+
+  Saved Card — TV shows the saved card (masked number, bank name). Phone receives an OTP notification. Phone panel shows an OTP entry screen. User confirms.
+  Both TV and phone show success. Handoff arc animates.
+
+  No saved card (new card flow) — if no card is saved, TV shows "Add a card from your phone" with a QR code. Scanning opens a secure card-addition page in the
+  phone browser with two options: (1) Tap your card — hold physical card to back of phone, NFC reads and auto-fills card details; (2) Enter manually — standard
+   card entry form. After card is added it gets tokenized and saved to the Jio account. TV confirms instantly and payment completes. Handoff arc animates
+  throughout.
+
+  The handoff arc between TV and phone should only animate for UPI, Saved Card, and New Card flows — not for JioPay Wallet or Postpaid Billing since those
+  require no cross-device interaction.

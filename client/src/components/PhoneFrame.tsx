@@ -4,9 +4,11 @@ import { Check, ShieldCheck, X } from 'lucide-react';
 
 interface PhoneFrameProps {
   step: Step;
+  onNewCardMethodSelect?: (method: 'tap' | 'manual') => void;
+  onAction?: () => void;
 }
 
-export default function PhoneFrame({ step }: PhoneFrameProps) {
+export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: PhoneFrameProps) {
   const { phoneState, phoneContent } = step;
 
   return (
@@ -65,8 +67,8 @@ export default function PhoneFrame({ step }: PhoneFrameProps) {
                 <h3 className="text-white font-medium mb-1">{phoneContent?.title}</h3>
                 <p className="text-white/70 text-sm mb-3">{phoneContent?.subtitle}</p>
                 <div className="flex gap-2">
-                  <button className="flex-1 bg-primary text-black py-2 rounded-lg text-sm font-medium">Pay {phoneContent?.amount}</button>
-                  <button className="flex-1 bg-white/10 text-white py-2 rounded-lg text-sm font-medium">Decline</button>
+                  <button onClick={onAction} className="flex-1 bg-primary text-black py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">Pay {phoneContent?.amount}</button>
+                  <button className="flex-1 bg-white/10 text-white py-2 rounded-lg text-sm font-medium hover:bg-white/20 transition-colors">Decline</button>
                 </div>
               </div>
             </motion.div>
@@ -177,9 +179,215 @@ export default function PhoneFrame({ step }: PhoneFrameProps) {
               >
                 <Check size={48} strokeWidth={3} />
               </motion.div>
-              <h2 className="text-2xl font-bold text-white mb-2">Payment Done</h2>
-              <p className="text-white/60">Transaction successful.</p>
+              <h2 className="text-2xl font-bold text-white mb-2">{phoneContent?.title || 'Payment Done'}</h2>
+              <p className="text-white/60">{phoneContent?.subtitle || 'Transaction successful.'}</p>
               <p className="text-white/40 text-sm mt-8">You can look back at the TV now.</p>
+            </motion.div>
+          )}
+
+          {/* OTP ENTRY STATE */}
+          {phoneState === 'otp_entry' && (
+            <motion.div 
+              key="otp"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              className="absolute inset-0 bg-white flex flex-col"
+            >
+              <div className="bg-[#0047AB] p-6 pt-16 pb-8 text-center flex flex-col items-center shadow-md">
+                <div className="text-white/80 text-sm mb-1 font-medium">HDFC Bank SecurePay</div>
+                <div className="text-xl font-bold text-white mb-1">Jio TeleOS</div>
+                <div className="text-3xl font-mono mt-2 text-white">{phoneContent?.amount}</div>
+              </div>
+              
+              <div className="flex-1 p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-800 mb-2">{phoneContent?.title}</h3>
+                <p className="text-sm text-gray-500 text-center mb-8">{phoneContent?.subtitle}</p>
+                
+                <div className="flex gap-3 mb-10">
+                  {[6, 2, 8, 4, 1, 9].map((digit, i) => (
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 + 0.5 }}
+                      className="w-10 h-12 border-b-2 border-primary flex items-center justify-center text-2xl font-mono text-gray-800"
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="text-sm text-primary font-medium mb-12 cursor-pointer">Resend OTP</div>
+                
+                <button onClick={onAction} className="w-full bg-[#0047AB] text-white py-4 rounded-xl font-bold text-lg shadow-lg flex justify-center items-center gap-2 hover:bg-blue-800 transition-colors">
+                  <Check size={20} /> Verify & Pay
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ADD CARD OPTIONS STATE */}
+          {phoneState === 'add_card_options' && (
+            <motion.div 
+              key="add_card"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-[#0F1626] flex flex-col p-6 pt-16"
+            >
+               <h2 className="text-3xl font-bold text-white mb-2">{phoneContent?.title}</h2>
+               <p className="text-white/60 mb-10">{phoneContent?.subtitle}</p>
+               
+               <div className="flex flex-col gap-4">
+                 <button 
+                   onClick={() => onNewCardMethodSelect?.('tap')}
+                   className="bg-primary/20 border-2 border-primary rounded-2xl p-6 flex flex-col items-center gap-4 text-center hover:bg-primary/30 transition-colors"
+                 >
+                   <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                     <svg xmlns="http://www.w3.org/0000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
+                   </div>
+                   <div>
+                     <div className="text-white font-bold text-lg mb-1">Tap your Card</div>
+                     <div className="text-white/60 text-sm">Hold physical card to back of phone (NFC)</div>
+                   </div>
+                 </button>
+                 
+                 <div className="text-center text-white/40 my-2">OR</div>
+                 
+                 <button 
+                   onClick={() => onNewCardMethodSelect?.('manual')}
+                   className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-4 text-center hover:bg-white/10 transition-colors"
+                 >
+                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white/80">
+                      <svg xmlns="http://www.w3.org/0000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    </div>
+                    <div>
+                      <div className="text-white font-bold text-lg mb-1">Enter Manually</div>
+                      <div className="text-white/60 text-sm">Type in your card details</div>
+                    </div>
+                 </button>
+               </div>
+            </motion.div>
+          )}
+
+          {/* ADD CARD TAP STATE */}
+          {phoneState === 'add_card_tap' && (
+            <motion.div 
+              key="add_card_tap"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-[#0F1626] flex flex-col items-center justify-center p-6 text-center"
+            >
+              <div className="w-32 h-32 mb-8 relative">
+                <div className="absolute inset-0 border-4 border-primary/30 rounded-full animate-ping"></div>
+                <div className="absolute inset-2 border-4 border-primary/60 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 flex items-center justify-center text-primary bg-primary/10 rounded-full">
+                  <svg xmlns="http://www.w3.org/0000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">{phoneContent?.title || 'Ready to Scan'}</h2>
+              <p className="text-white/60 text-lg">{phoneContent?.subtitle || 'Hold your card to the back of your phone'}</p>
+            </motion.div>
+          )}
+
+          {/* ADD CARD MANUAL STATE */}
+          {phoneState === 'add_card_manual' && (
+            <motion.div 
+              key="add_card_manual"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-white flex flex-col"
+            >
+              <div className="p-6 pt-16 pb-4 border-b">
+                <h2 className="text-2xl font-bold text-black">{phoneContent?.title || 'Enter Details'}</h2>
+                <p className="text-gray-500">{phoneContent?.subtitle || 'Type card information'}</p>
+              </div>
+              <div className="flex-1 p-6 flex flex-col gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Card Number</label>
+                  <div className="border-b-2 border-gray-200 pb-2 text-xl tracking-widest text-gray-400 font-mono">
+                    XXXX XXXX XXXX XXXX
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Expiry</label>
+                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">MM/YY</div>
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">CVV</label>
+                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">XXX</div>
+                  </div>
+                </div>
+                <div className="mt-auto">
+                  <button onClick={onAction} className="w-full bg-[#0047AB] text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-800 transition-colors">
+                    Save & Proceed
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ADD CARD TAP STATE */}
+          {phoneState === 'add_card_tap' && (
+            <motion.div 
+              key="add_card_tap"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-[#0F1626] flex flex-col items-center justify-center p-6 text-center"
+            >
+              <div className="w-32 h-32 mb-8 relative">
+                <div className="absolute inset-0 border-4 border-primary/30 rounded-full animate-ping"></div>
+                <div className="absolute inset-2 border-4 border-primary/60 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 flex items-center justify-center text-primary bg-primary/10 rounded-full">
+                  <svg xmlns="http://www.w3.org/0000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">{phoneContent?.title || 'Ready to Scan'}</h2>
+              <p className="text-white/60 text-lg">{phoneContent?.subtitle || 'Hold your card to the back of your phone'}</p>
+            </motion.div>
+          )}
+
+          {/* ADD CARD MANUAL STATE */}
+          {phoneState === 'add_card_manual' && (
+            <motion.div 
+              key="add_card_manual"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-white flex flex-col"
+            >
+              <div className="p-6 pt-16 pb-4 border-b">
+                <h2 className="text-2xl font-bold text-black">{phoneContent?.title || 'Enter Details'}</h2>
+                <p className="text-gray-500">{phoneContent?.subtitle || 'Type card information'}</p>
+              </div>
+              <div className="flex-1 p-6 flex flex-col gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Card Number</label>
+                  <div className="border-b-2 border-gray-200 pb-2 text-xl tracking-widest text-gray-400 font-mono">
+                    XXXX XXXX XXXX XXXX
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Expiry</label>
+                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">MM/YY</div>
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">CVV</label>
+                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">XXX</div>
+                  </div>
+                </div>
+                <div className="mt-auto">
+                  <button onClick={onAction} className="w-full bg-[#0047AB] text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-800 transition-colors">
+                    Save & Proceed
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SCENARIOS, Scenario, Step } from '@/lib/scenarios';
+import { SCENARIOS, Scenario, Step, OTT_BRANCHES } from '@/lib/scenarios';
 import TVFrame from '@/components/TVFrame';
 import PhoneFrame from '@/components/PhoneFrame';
 import ConnectionArc from '@/components/ConnectionArc';
@@ -10,9 +10,48 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [activeScenarioId, setActiveScenarioId] = useState<string>(SCENARIOS[0].id);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('upi');
+  const [selectedNewCardMethod, setSelectedNewCardMethod] = useState<'tap' | 'manual' | null>(null);
   
   const activeScenario = SCENARIOS.find(s => s.id === activeScenarioId) || SCENARIOS[0];
-  const currentStep = activeScenario.steps[currentStepIndex];
+  
+  // Calculate current steps based on scenario and selected payment method
+  let currentSteps = activeScenario.steps;
+  
+  // If we're in OTT subscription scenario and past the payment method selection
+  if (activeScenarioId === 'ott-sub' && currentStepIndex >= 2) {
+    // Inject the selected branch after the payment method selection screen
+    const baseSteps = activeScenario.steps.slice(0, 3); // Up to payment method selection
+    let branchSteps = (OTT_BRANCHES as any)[selectedPaymentMethod] || OTT_BRANCHES.upi;
+    
+    if (selectedPaymentMethod === 'new_card') {
+      if (selectedNewCardMethod === 'tap') {
+        branchSteps = [
+          branchSteps[0], // qr_code_new_card
+          branchSteps[1], // add_card_options
+          branchSteps[2], // add_card_tap
+          branchSteps[4], // success
+        ];
+      } else if (selectedNewCardMethod === 'manual') {
+        branchSteps = [
+          branchSteps[0], // qr_code_new_card
+          branchSteps[1], // add_card_options
+          branchSteps[3], // add_card_manual
+          branchSteps[4], // success
+        ];
+      } else {
+        // If not selected yet, stop at options
+        branchSteps = [
+          branchSteps[0], // qr_code_new_card
+          branchSteps[1], // add_card_options
+        ];
+      }
+    }
+    
+    currentSteps = [...baseSteps, ...branchSteps];
+  }
+  
+  const currentStep = currentSteps[Math.min(currentStepIndex, currentSteps.length - 1)];
 
   // Scale references for fixed-size mockups
   const tvContainerRef = useRef<HTMLDivElement>(null);
@@ -124,7 +163,9 @@ export default function Home() {
                 <TVFrame 
                   step={currentStep} 
                   scenarioTitle={activeScenario.title}
-                  onClick={handleTVClick} 
+                  onClick={handleTVClick}
+                  onMethodSelect={setSelectedPaymentMethod}
+                  selectedMethod={selectedPaymentMethod}
                 />
               </div>
             </div>
@@ -147,7 +188,15 @@ export default function Home() {
                   visibility: phoneScale > 0 ? 'visible' : 'hidden'
                 }}
               >
-                <PhoneFrame step={currentStep} />
+                <PhoneFrame 
+                  step={currentStep} 
+                  onNewCardMethodSelect={(method) => {
+                    setSelectedNewCardMethod(method);
+                    // Automatically advance to the next step when a method is selected
+                    setTimeout(() => handleNext(), 300);
+                  }}
+                  onAction={() => handleNext()}
+                />
               </div>
             </div>
 

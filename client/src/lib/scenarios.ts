@@ -7,14 +7,22 @@ export type TVState =
   | 'waiting' 
   | 'success' 
   | 'subscription_hub' 
-  | 'recharge_select';
+  | 'recharge_select'
+  | 'wallet_confirm'
+  | 'postpaid_confirm'
+  | 'saved_card_confirm'
+  | 'qr_code_new_card';
 
 export type PhoneState = 
   | 'idle' 
   | 'notification' 
   | 'upi_pin' 
   | 'family_auth' 
-  | 'success';
+  | 'success'
+  | 'otp_entry'
+  | 'add_card_options'
+  | 'add_card_tap'
+  | 'add_card_manual';
 
 export interface Step {
   tvState: TVState;
@@ -39,6 +47,34 @@ export interface Scenario {
   icon: string;
   steps: Step[];
 }
+
+export const OTT_BRANCHES: Record<string, Step[]> = {
+  upi: [
+    { tvState: 'qr_code', phoneState: 'idle', tvContent: { title: 'Scan to Pay ₹999', subtitle: 'Annual Subscription' }, handoffActive: true },
+    { tvState: 'waiting', phoneState: 'upi_pin', phoneContent: { amount: '₹999' }, handoffActive: true },
+    { tvState: 'success', phoneState: 'success', tvContent: { title: 'Payment Successful', subtitle: 'Your subscription is now active' } },
+  ],
+  wallet: [
+    { tvState: 'wallet_confirm', phoneState: 'idle', tvContent: { title: 'Pay from Wallet', subtitle: 'Pay ₹999 from JioPay Wallet?', price: 'Balance: ₹1,500' } },
+    { tvState: 'success', phoneState: 'idle', tvContent: { title: 'Payment Successful', subtitle: 'Your subscription is now active' } },
+  ],
+  postpaid: [
+    { tvState: 'postpaid_confirm', phoneState: 'idle', tvContent: { title: 'Add to Jio Bill', subtitle: 'Add ₹999 to your next Jio postpaid bill?' } },
+    { tvState: 'success', phoneState: 'idle', tvContent: { title: 'Payment Successful', subtitle: 'Will appear on next bill' } },
+  ],
+  saved_card: [
+    { tvState: 'saved_card_confirm', phoneState: 'notification', tvContent: { title: 'Pay via Saved Card', subtitle: 'HDFC Bank ending in 4242' }, phoneContent: { title: 'HDFC Bank', subtitle: 'OTP for Jio TeleOS: ₹999' }, handoffActive: true },
+    { tvState: 'waiting', phoneState: 'otp_entry', phoneContent: { title: 'Enter OTP', subtitle: 'Sent to your registered mobile', amount: '₹999' }, handoffActive: true },
+    { tvState: 'success', phoneState: 'success', tvContent: { title: 'Payment Successful', subtitle: 'Your subscription is now active' } },
+  ],
+  new_card: [
+    { tvState: 'qr_code_new_card', phoneState: 'idle', tvContent: { title: 'Add New Card', subtitle: 'Scan from phone to add card' }, handoffActive: true },
+    { tvState: 'waiting', phoneState: 'add_card_options', phoneContent: { title: 'Add Card', subtitle: 'Choose how to add' }, handoffActive: true },
+    { tvState: 'waiting', phoneState: 'add_card_tap', phoneContent: { title: 'Tap Card', subtitle: 'Hold card to back of phone' }, handoffActive: true }, 
+    { tvState: 'waiting', phoneState: 'add_card_manual', phoneContent: { title: 'Enter Details', subtitle: 'Type card information' }, handoffActive: true }, 
+    { tvState: 'success', phoneState: 'success', tvContent: { title: 'Payment Successful', subtitle: 'Card saved & payment complete' } },
+  ]
+};
 
 export const SCENARIOS: Scenario[] = [
   {
