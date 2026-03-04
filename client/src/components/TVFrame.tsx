@@ -23,11 +23,11 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
 
   return (
     <div 
-      className="w-full h-full rounded-[24px] overflow-hidden bg-black border-[8px] border-[#1a1a1a] shadow-[0_0_50px_rgba(0,0,0,0.5)] relative cursor-pointer group"
+      className="w-full h-full rounded-[32px] overflow-hidden bg-black border-[12px] border-[#0a0a0a] shadow-[0_20px_60px_rgba(0,0,0,0.6)] relative cursor-pointer group ring-1 ring-white/10"
       onClick={onClick}
     >
       {/* TV Bezel Reflection */}
-      <div className="absolute inset-0 rounded-[16px] pointer-events-none border border-white/5 z-50"></div>
+      <div className="absolute inset-0 rounded-[20px] pointer-events-none border border-white/10 z-50"></div>
       
       {/* Dynamic Background */}
       <div className="absolute inset-0 z-0">
@@ -46,9 +46,9 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
       <div className="relative z-10 w-full h-full p-12 flex flex-col justify-between">
         
         {/* Top Bar */}
-        <header className="flex justify-between items-center opacity-80 pt-4 px-8">
-          <div className="text-3xl font-bold tracking-wider text-white">TeleOS</div>
-          <div className="flex gap-4 items-center text-xl">
+        <header className="flex justify-between items-center opacity-80 pt-4 px-8 z-20">
+          <div className="text-3xl font-bold tracking-wider text-white drop-shadow-md">TeleOS</div>
+          <div className="flex gap-4 items-center text-xl drop-shadow-md">
             <User className="w-8 h-8" /> Profile 1
             <div className="w-px h-6 bg-white/30 mx-2" />
             10:42 PM
@@ -56,7 +56,7 @@ export default function TVFrame({ step, scenarioTitle, onClick }: TVFrameProps) 
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex items-center justify-center p-8 mt-16 pb-16">
+        <main className="flex-1 flex items-center justify-center p-8 mt-16 pb-16 z-10">
           <AnimatePresence mode="wait">
             
             {/* CONTENT PLAYING STATE */}

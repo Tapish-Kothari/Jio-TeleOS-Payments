@@ -10,9 +10,9 @@ export default function PhoneFrame({ step }: PhoneFrameProps) {
   const { phoneState, phoneContent } = step;
 
   return (
-    <div className="w-full h-full rounded-[40px] border-[8px] border-[#111] bg-black shadow-2xl relative overflow-hidden flex flex-col">
+    <div className="w-full h-full rounded-[40px] border-[10px] border-[#0a0a0a] bg-black shadow-2xl relative overflow-hidden flex flex-col ring-1 ring-white/10">
       {/* Notch */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#111] rounded-b-2xl z-50"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#0a0a0a] rounded-b-2xl z-50"></div>
       
       {/* Status Bar */}
       <div className="h-12 w-full flex justify-between items-center px-6 text-white/80 text-xs font-medium z-40 relative">

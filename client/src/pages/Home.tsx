@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SCENARIOS, Scenario, Step } from '@/lib/scenarios';
 import TVFrame from '@/components/TVFrame';
@@ -13,6 +13,34 @@ export default function Home() {
   
   const activeScenario = SCENARIOS.find(s => s.id === activeScenarioId) || SCENARIOS[0];
   const currentStep = activeScenario.steps[currentStepIndex];
+
+  // Scale references for fixed-size mockups
+  const tvContainerRef = useRef<HTMLDivElement>(null);
+  const phoneContainerRef = useRef<HTMLDivElement>(null);
+  const [tvScale, setTvScale] = useState(0);
+  const [phoneScale, setPhoneScale] = useState(0);
+
+  useEffect(() => {
+    const tvObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setTvScale(entry.contentRect.width / 1600);
+      }
+    });
+    
+    const phoneObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setPhoneScale(entry.contentRect.width / 400);
+      }
+    });
+
+    if (tvContainerRef.current) tvObserver.observe(tvContainerRef.current);
+    if (phoneContainerRef.current) phoneObserver.observe(phoneContainerRef.current);
+
+    return () => {
+      tvObserver.disconnect();
+      phoneObserver.disconnect();
+    };
+  }, []);
 
   // Reset step when scenario changes
   useEffect(() => {
@@ -82,10 +110,17 @@ export default function Home() {
             
             {/* TV Mockup */}
             <div 
-              className="relative z-10 w-full max-w-[700px] xl:max-w-[850px] 2xl:max-w-[1000px] aspect-video shrink shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-2xl md:rounded-[32px] overflow-hidden bg-black"
-              style={{ containerType: 'inline-size' }}
+              ref={tvContainerRef}
+              className="relative z-10 w-full max-w-[700px] xl:max-w-[850px] 2xl:max-w-[1000px] aspect-video shrink"
             >
-              <div className="w-[1600px] h-[900px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(calc(100cqw / 1600))' }}>
+              <div 
+                className="w-[1600px] h-[900px] origin-top-left absolute top-0 left-0" 
+                style={{ 
+                  transform: `scale(${tvScale})`,
+                  opacity: tvScale > 0 ? 1 : 0,
+                  visibility: tvScale > 0 ? 'visible' : 'hidden'
+                }}
+              >
                 <TVFrame 
                   step={currentStep} 
                   scenarioTitle={activeScenario.title}
@@ -101,10 +136,17 @@ export default function Home() {
 
             {/* Phone Mockup */}
             <div 
-              className="relative z-10 w-[240px] xl:w-[280px] 2xl:w-[320px] aspect-[1/2.1] shrink-0 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2rem] 2xl:rounded-[3rem] overflow-hidden bg-black"
-              style={{ containerType: 'inline-size' }}
+              ref={phoneContainerRef}
+              className="relative z-10 w-[240px] xl:w-[280px] 2xl:w-[320px] aspect-[1/2.1] shrink-0"
             >
-              <div className="w-[400px] h-[840px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(calc(100cqw / 400))' }}>
+              <div 
+                className="w-[400px] h-[840px] origin-top-left absolute top-0 left-0" 
+                style={{ 
+                  transform: `scale(${phoneScale})`,
+                  opacity: phoneScale > 0 ? 1 : 0,
+                  visibility: phoneScale > 0 ? 'visible' : 'hidden'
+                }}
+              >
                 <PhoneFrame step={currentStep} />
               </div>
             </div>
