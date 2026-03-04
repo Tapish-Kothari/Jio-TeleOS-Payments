@@ -159,7 +159,10 @@ export default function Home() {
         {/* Header / Tabs */}
         <header className="p-2 sm:p-4 shrink-0 flex flex-col items-center gap-2 sm:gap-4">
           <div className="text-center space-y-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90">Jio TeleOS</h1>
+            <h1 className="flex items-center justify-center gap-2 text-xl sm:text-2xl font-bold tracking-tight text-white/90">
+              <img src="/favicon.svg" alt="Jio Logo" className="w-6 h-6 sm:w-8 sm:h-8" />
+              Jio TeleOS
+            </h1>
             <p className="text-primary text-xs sm:text-sm uppercase tracking-[0.2em] font-mono">Payments Demo</p>
           </div>
 
