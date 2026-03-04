@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/lib/scenarios';
-import { Check, ShieldCheck, X } from 'lucide-react';
+import { Check, ShieldCheck, X, MapPin, ShoppingCart } from 'lucide-react';
 
 interface PhoneFrameProps {
   step: Step;
@@ -15,7 +15,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
     <div className="w-full h-full rounded-[40px] border-[10px] border-[#0a0a0a] bg-black shadow-2xl relative overflow-hidden flex flex-col ring-1 ring-white/10">
       {/* Notch */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#0a0a0a] rounded-b-2xl z-50"></div>
-      
+
       {/* Status Bar */}
       <div className="h-12 w-full flex justify-between items-center px-6 text-white/80 text-xs font-medium z-40 relative">
         <span>10:42</span>
@@ -27,10 +27,10 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
       <div className="flex-1 relative bg-[#090C15]">
         <AnimatePresence mode="wait">
-          
+
           {/* IDLE STATE */}
           {phoneState === 'idle' && (
-            <motion.div 
+            <motion.div
               key="idle"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -41,7 +41,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                 <div className="text-6xl font-light text-white/90 mb-2">10:42</div>
                 <div className="text-white/50 text-lg">Tuesday, October 15</div>
               </div>
-              
+
               {/* Home indicator */}
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-white/20 rounded-full" />
             </motion.div>
@@ -49,7 +49,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* NOTIFICATION STATE */}
           {phoneState === 'notification' && (
-            <motion.div 
+            <motion.div
               key="notification"
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* UPI PIN STATE */}
           {phoneState === 'upi_pin' && (
-            <motion.div 
+            <motion.div
               key="upi"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
@@ -88,17 +88,17 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                 <div className="text-2xl font-bold text-black mb-1">Jio TeleOS App</div>
                 <div className="text-4xl font-mono mt-4 text-black">{phoneContent?.amount}</div>
               </div>
-              
+
               <div className="flex-1 p-6 flex flex-col items-center justify-center">
                 <div className="text-sm text-gray-500 mb-6">ENTER 4-DIGIT UPI PIN</div>
-                
+
                 {/* PIN Dots */}
                 <div className="flex gap-4 mb-12">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="w-4 h-4 rounded-full border border-gray-400"></div>
                   ))}
                 </div>
-                
+
                 {/* Numpad */}
                 <div className="grid grid-cols-3 gap-y-6 gap-x-12 w-full max-w-[240px] mb-8">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, '', 0, 'del'].map((key, i) => (
@@ -111,7 +111,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="w-full flex justify-end px-4">
                   <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg text-black animate-pulse">
                     <Check size={28} />
@@ -123,7 +123,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* FAMILY AUTH STATE */}
           {phoneState === 'family_auth' && (
-            <motion.div 
+            <motion.div
               key="family"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -133,10 +133,10 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
               <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 mb-6 self-center">
                 <ShieldCheck size={32} />
               </div>
-              
+
               <h2 className="text-2xl font-bold text-white text-center mb-2">{phoneContent?.title}</h2>
               <p className="text-white/60 text-center mb-8">{phoneContent?.subtitle}</p>
-              
+
               <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-auto">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-white/60">Amount</span>
@@ -151,7 +151,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                   <span className="text-white">Minecraft</span>
                 </div>
               </div>
-              
+
               <div className="flex flex-col gap-3">
                 <button className="w-full py-4 bg-primary text-black font-bold rounded-xl text-lg">
                   Approve Purchase
@@ -165,13 +165,13 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* SUCCESS STATE */}
           {phoneState === 'success' && (
-            <motion.div 
+            <motion.div
               key="success"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="absolute inset-0 bg-[#0F1626] flex flex-col items-center justify-center p-6 text-center"
             >
-              <motion.div 
+              <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', damping: 12 }}
@@ -187,7 +187,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* OTP ENTRY STATE */}
           {phoneState === 'otp_entry' && (
-            <motion.div 
+            <motion.div
               key="otp"
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
@@ -199,15 +199,15 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                 <div className="text-xl font-bold text-white mb-1">Jio TeleOS</div>
                 <div className="text-3xl font-mono mt-2 text-white">{phoneContent?.amount}</div>
               </div>
-              
+
               <div className="flex-1 p-6 flex flex-col items-center">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{phoneContent?.title}</h3>
                 <p className="text-sm text-gray-500 text-center mb-8">{phoneContent?.subtitle}</p>
-                
+
                 <div className="flex gap-3 mb-10">
                   {[6, 2, 8, 4, 1, 9].map((digit, i) => (
-                    <motion.div 
-                      key={i} 
+                    <motion.div
+                      key={i}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 + 0.5 }}
@@ -217,9 +217,9 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                     </motion.div>
                   ))}
                 </div>
-                
+
                 <div className="text-sm text-primary font-medium mb-12 cursor-pointer">Resend OTP</div>
-                
+
                 <button onClick={onAction} className="w-full bg-[#0047AB] text-white py-4 rounded-xl font-bold text-lg shadow-lg flex justify-center items-center gap-2 hover:bg-blue-800 transition-colors">
                   <Check size={20} /> Verify & Pay
                 </button>
@@ -229,7 +229,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* ADD CARD OPTIONS STATE */}
           {phoneState === 'add_card_options' && (
-            <motion.div 
+            <motion.div
               key="add_card"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -238,29 +238,29 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
             >
                <h2 className="text-3xl font-bold text-white mb-2">{phoneContent?.title}</h2>
                <p className="text-white/60 mb-10">{phoneContent?.subtitle}</p>
-               
+
                <div className="flex flex-col gap-4">
-                 <button 
+                 <button
                    onClick={() => onNewCardMethodSelect?.('tap')}
                    className="bg-primary/20 border-2 border-primary rounded-2xl p-6 flex flex-col items-center gap-4 text-center hover:bg-primary/30 transition-colors"
                  >
                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary">
-                     <svg xmlns="http://www.w3.org/0000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
                    </div>
                    <div>
                      <div className="text-white font-bold text-lg mb-1">Tap your Card</div>
                      <div className="text-white/60 text-sm">Hold physical card to back of phone (NFC)</div>
                    </div>
                  </button>
-                 
+
                  <div className="text-center text-white/40 my-2">OR</div>
-                 
-                 <button 
+
+                 <button
                    onClick={() => onNewCardMethodSelect?.('manual')}
                    className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-4 text-center hover:bg-white/10 transition-colors"
                  >
                     <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center text-white/80">
-                      <svg xmlns="http://www.w3.org/0000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                     </div>
                     <div>
                       <div className="text-white font-bold text-lg mb-1">Enter Manually</div>
@@ -273,7 +273,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* ADD CARD TAP STATE */}
           {phoneState === 'add_card_tap' && (
-            <motion.div 
+            <motion.div
               key="add_card_tap"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -284,7 +284,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                 <div className="absolute inset-0 border-4 border-primary/30 rounded-full animate-ping"></div>
                 <div className="absolute inset-2 border-4 border-primary/60 rounded-full animate-pulse"></div>
                 <div className="absolute inset-0 flex items-center justify-center text-primary bg-primary/10 rounded-full">
-                  <svg xmlns="http://www.w3.org/0000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
                 </div>
               </div>
               <h2 className="text-3xl font-bold text-white mb-4">{phoneContent?.title || 'Ready to Scan'}</h2>
@@ -294,7 +294,7 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
 
           {/* ADD CARD MANUAL STATE */}
           {phoneState === 'add_card_manual' && (
-            <motion.div 
+            <motion.div
               key="add_card_manual"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -331,60 +331,52 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
             </motion.div>
           )}
 
-          {/* ADD CARD TAP STATE */}
-          {phoneState === 'add_card_tap' && (
-            <motion.div 
-              key="add_card_tap"
-              initial={{ opacity: 0, y: 20 }}
+          {/* JIOMART CART STATE */}
+          {phoneState === 'jiomart_cart' && (
+            <motion.div
+              key="jiomart_cart"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-[#0F1626] flex flex-col items-center justify-center p-6 text-center"
-            >
-              <div className="w-32 h-32 mb-8 relative">
-                <div className="absolute inset-0 border-4 border-primary/30 rounded-full animate-ping"></div>
-                <div className="absolute inset-2 border-4 border-primary/60 rounded-full animate-pulse"></div>
-                <div className="absolute inset-0 flex items-center justify-center text-primary bg-primary/10 rounded-full">
-                  <svg xmlns="http://www.w3.org/0000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M12 18h.01"/><path d="M12 6v6"/></svg>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-4">{phoneContent?.title || 'Ready to Scan'}</h2>
-              <p className="text-white/60 text-lg">{phoneContent?.subtitle || 'Hold your card to the back of your phone'}</p>
-            </motion.div>
-          )}
-
-          {/* ADD CARD MANUAL STATE */}
-          {phoneState === 'add_card_manual' && (
-            <motion.div 
-              key="add_card_manual"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               className="absolute inset-0 bg-white flex flex-col"
             >
-              <div className="p-6 pt-16 pb-4 border-b">
-                <h2 className="text-2xl font-bold text-black">{phoneContent?.title || 'Enter Details'}</h2>
-                <p className="text-gray-500">{phoneContent?.subtitle || 'Type card information'}</p>
+              {/* JioMart header */}
+              <div className="bg-[#F26522] p-4 pt-14 pb-4 flex items-center gap-3">
+                <ShoppingCart size={20} className="text-white" />
+                <span className="text-white font-bold text-lg tracking-wide">JioMart</span>
               </div>
-              <div className="flex-1 p-6 flex flex-col gap-6">
+
+              {/* Product image placeholder */}
+              <div className="bg-gray-100 h-40 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-5xl mb-1">🔪</div>
+                  <div className="text-xs text-gray-400">Product image</div>
+                </div>
+              </div>
+
+              {/* Product details */}
+              <div className="flex-1 p-4 flex flex-col gap-3 overflow-hidden">
                 <div>
-                  <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Card Number</label>
-                  <div className="border-b-2 border-gray-200 pb-2 text-xl tracking-widest text-gray-400 font-mono">
-                    XXXX XXXX XXXX XXXX
+                  <h3 className="text-base font-bold text-gray-900 leading-tight">Professional Chef Knife Set (5 pcs)</h3>
+                  <div className="text-xl font-bold text-[#F26522] mt-1">₹1,299</div>
+                  <div className="text-xs text-green-600 font-medium mt-0.5">In Stock · Free delivery tomorrow</div>
+                </div>
+
+                {/* Delivery address */}
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex gap-2">
+                  <MapPin size={16} className="text-[#F26522] shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-xs font-bold text-gray-700">Deliver to Home</div>
+                    <div className="text-xs text-gray-500 leading-tight">Flat 4B, Bandra West, Mumbai — 400050</div>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">Expiry</label>
-                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">MM/YY</div>
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-xs font-bold text-gray-500 mb-2 block uppercase">CVV</label>
-                    <div className="border-b-2 border-gray-200 pb-2 text-lg text-gray-400 font-mono">XXX</div>
-                  </div>
-                </div>
+
                 <div className="mt-auto">
-                  <button onClick={onAction} className="w-full bg-[#0047AB] text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-800 transition-colors">
-                    Save & Proceed
+                  <button
+                    onClick={onAction}
+                    className="w-full bg-[#F26522] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:bg-orange-600 transition-colors"
+                  >
+                    Proceed to Pay ₹1,299
                   </button>
                 </div>
               </div>

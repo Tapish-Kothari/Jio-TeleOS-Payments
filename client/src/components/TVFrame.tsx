@@ -1,16 +1,23 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/lib/scenarios';
-import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2, Plus } from 'lucide-react';
+import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2, Plus, Mic } from 'lucide-react';
+import AIOverlay, { AIPhase } from './AIOverlay';
 
 interface TVFrameProps {
   step: Step;
   scenarioTitle: string;
+  scenarioId: string;
   onClick: () => void;
   onMethodSelect?: (method: string) => void;
   selectedMethod?: string;
+  aiPhase?: AIPhase | null;
+  onAITrigger?: () => void;
+  onAIDismiss?: () => void;
+  onAIExecute?: (method: string) => void;
+  onAIShowAllOptions?: () => void;
 }
 
-export default function TVFrame({ step, scenarioTitle, onClick, onMethodSelect, selectedMethod = 'upi' }: TVFrameProps) {
+export default function TVFrame({ step, scenarioTitle, scenarioId, onClick, onMethodSelect, selectedMethod = 'upi', aiPhase, onAITrigger, onAIDismiss, onAIExecute, onAIShowAllOptions }: TVFrameProps) {
   const { tvState, tvContent } = step;
 
   // Background image placeholder based on scenario
@@ -375,13 +382,19 @@ export default function TVFrame({ step, scenarioTitle, onClick, onMethodSelect, 
 
             {/* SUBSCRIPTION HUB */}
             {tvState === 'subscription_hub' && (
-              <motion.div 
+              <motion.div
                 key="hub"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="w-full max-w-5xl"
               >
-                <h2 className="text-4xl font-bold text-white mb-8">Active Subscriptions</h2>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-4xl font-bold text-white">Active Subscriptions</h2>
+                  <div className="bg-primary/10 border border-primary/30 px-5 py-3 rounded-xl text-right">
+                    <div className="text-white/50 text-sm">Total monthly spend</div>
+                    <div className="text-primary font-mono text-2xl font-bold">₹2,516/mo</div>
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-6">
                   {[
                     { name: 'Netflix Premium', price: '₹649/mo', next: 'Next billing: 15 Oct' },
@@ -452,6 +465,30 @@ export default function TVFrame({ step, scenarioTitle, onClick, onMethodSelect, 
         <div className="absolute bottom-6 right-6 bg-black/50 backdrop-blur text-white/50 text-xs px-3 py-1.5 rounded-full pointer-events-none">
           Click screen to advance step
         </div>
+
+        {/* AI Trigger Button */}
+        {!aiPhase && onAITrigger && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onAITrigger(); }}
+            className="absolute bottom-6 left-8 flex items-center gap-2 bg-white/8 hover:bg-primary/20 border border-white/15 hover:border-primary/40 text-white/60 hover:text-primary px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 group"
+          >
+            <Mic size={16} className="group-hover:animate-pulse" />
+            Ask Jio AI
+          </button>
+        )}
+
+        {/* AI Overlay */}
+        <AnimatePresence>
+          {aiPhase && onAIDismiss && onAIExecute && onAIShowAllOptions && (
+            <AIOverlay
+              phase={aiPhase}
+              scenarioId={scenarioId}
+              onDismiss={onAIDismiss}
+              onExecute={onAIExecute}
+              onShowAllOptions={onAIShowAllOptions}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
