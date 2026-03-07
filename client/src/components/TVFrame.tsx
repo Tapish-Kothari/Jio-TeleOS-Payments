@@ -1,7 +1,22 @@
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/lib/scenarios';
-import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2, Plus, Mic } from 'lucide-react';
+import { Play, CreditCard, Smartphone, QrCode, CheckCircle2, User, Wallet, Loader2, Plus, Mic, Zap, CircleDot } from 'lucide-react';
 import AIOverlay, { AIPhase } from './AIOverlay';
+
+interface PaymentMethod {
+  id: string;
+  icon: React.ElementType;
+  label: string;
+}
+
+const DEFAULT_PAYMENT_METHODS: PaymentMethod[] = [
+  { id: 'upi', icon: QrCode, label: 'UPI / Scan QR' },
+  { id: 'wallet', icon: Wallet, label: 'JioPay Wallet' },
+  { id: 'postpaid', icon: Smartphone, label: 'Jio Postpaid Billing' },
+  { id: 'saved_card', icon: CreditCard, label: 'Saved Card (...4242)' },
+  { id: 'new_card', icon: Plus, label: 'Add New Card' },
+];
 
 interface TVFrameProps {
   step: Step;
@@ -10,6 +25,7 @@ interface TVFrameProps {
   onClick: () => void;
   onMethodSelect?: (method: string) => void;
   selectedMethod?: string;
+  paymentMethods?: PaymentMethod[];
   aiPhase?: AIPhase | null;
   onAITrigger?: () => void;
   onAIDismiss?: () => void;
@@ -17,7 +33,7 @@ interface TVFrameProps {
   onAIShowAllOptions?: () => void;
 }
 
-export default function TVFrame({ step, scenarioTitle, scenarioId, onClick, onMethodSelect, selectedMethod = 'upi', aiPhase, onAITrigger, onAIDismiss, onAIExecute, onAIShowAllOptions }: TVFrameProps) {
+export default function TVFrame({ step, scenarioTitle, scenarioId, onClick, onMethodSelect, selectedMethod = 'upi', paymentMethods, aiPhase, onAITrigger, onAIDismiss, onAIExecute, onAIShowAllOptions }: TVFrameProps) {
   const { tvState, tvContent } = step;
 
   // Background image placeholder based on scenario
@@ -132,13 +148,7 @@ export default function TVFrame({ step, scenarioTitle, scenarioId, onClick, onMe
                 </div>
                 
                 <div className="flex-1 max-w-md flex flex-col gap-3">
-                  {[
-                    { id: 'upi', icon: QrCode, label: 'UPI / Scan QR' },
-                    { id: 'wallet', icon: Wallet, label: 'JioPay Wallet' },
-                    { id: 'postpaid', icon: Smartphone, label: 'Jio Postpaid Billing' },
-                    { id: 'saved_card', icon: CreditCard, label: 'Saved Card (...4242)' },
-                    { id: 'new_card', icon: Plus, label: 'Add New Card' },
-                  ].map((method) => {
+                  {(paymentMethods || DEFAULT_PAYMENT_METHODS).map((method) => {
                     const isActive = selectedMethod === method.id;
                     return (
                       <div 
@@ -456,6 +466,102 @@ export default function TVFrame({ step, scenarioTitle, scenarioId, onClick, onMe
                    ))}
                  </div>
                </motion.div>
+            )}
+
+            {/* RECHARGE PLAN STATE */}
+            {tvState === 'recharge_plan' && (
+              <motion.div
+                key="recharge_plan"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-5xl"
+              >
+                <div className="mb-8">
+                  <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                  <p className="text-xl text-white/60 mt-2">{tvContent?.subtitle}</p>
+                </div>
+                <div className="grid grid-cols-4 gap-5">
+                  {[
+                    { price: '₹199', validity: '28 days', data: '2GB/day', calls: 'Unlimited', highlight: false },
+                    { price: '₹299', validity: '28 days', data: '3GB/day', calls: 'Unlimited + SMS', highlight: true },
+                    { price: '₹499', validity: '56 days', data: '2GB/day', calls: 'Unlimited + SMS', highlight: false },
+                    { price: '₹719', validity: '84 days', data: '2GB/day', calls: 'Unlimited + SMS', highlight: false },
+                  ].map((plan, i) => (
+                    <div key={i} className={`p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${
+                      plan.highlight
+                        ? 'bg-primary/20 border-2 border-primary scale-105 shadow-[0_0_25px_rgba(0,230,255,0.2)]'
+                        : 'glass-panel border border-white/10 hover:bg-white/10'
+                    }`}>
+                      <div className={`text-3xl font-mono font-bold ${plan.highlight ? 'text-primary' : 'text-white'}`}>{plan.price}</div>
+                      <div className="text-white/50 text-sm">{plan.validity}</div>
+                      <div className="w-full h-px bg-white/10 my-1" />
+                      <div className="text-white/80 text-sm">{plan.data}</div>
+                      <div className="text-white/60 text-xs">{plan.calls}</div>
+                      {plan.highlight && <div className="text-xs text-primary font-medium mt-1">Most Popular</div>}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* UPI LITE BALANCE STATE */}
+            {tvState === 'upi_lite_balance' && (
+              <motion.div
+                key="upi_lite"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="glass-card rounded-2xl p-10 max-w-2xl w-full flex flex-col gap-6 items-center text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-yellow-400/20 flex items-center justify-center text-yellow-400 mb-2">
+                  <Zap size={32} />
+                </div>
+                <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                <p className="text-xl text-white/70">{tvContent?.subtitle}</p>
+
+                <div className="bg-white/5 border border-white/10 rounded-xl p-5 w-full">
+                  <div className="text-white/50 text-sm mb-1">On-device UPI Lite Balance</div>
+                  <div className="text-4xl font-mono text-yellow-400">₹340</div>
+                </div>
+
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <button className="bg-yellow-400 text-black font-bold text-xl py-4 px-12 rounded-full hover:scale-105 transition-transform flex items-center gap-3">
+                  <Zap size={20} /> Pay Instantly — No PIN
+                </button>
+              </motion.div>
+            )}
+
+            {/* UPI CIRCLE LIMIT STATE */}
+            {tvState === 'upi_circle_limit' && (
+              <motion.div
+                key="upi_circle"
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                className="glass-card rounded-2xl p-10 max-w-2xl w-full flex flex-col gap-6 items-center text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 mb-2">
+                  <CircleDot size={32} />
+                </div>
+                <h2 className="text-4xl font-bold text-white">{tvContent?.title}</h2>
+                <p className="text-xl text-white/70">{tvContent?.subtitle}</p>
+
+                <div className="bg-white/5 border border-white/10 rounded-xl p-5 w-full flex justify-between items-center">
+                  <div className="text-left">
+                    <div className="text-white/50 text-sm">Delegated by</div>
+                    <div className="text-white font-semibold">Dad (Rahul)</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-white/50 text-sm">Monthly Limit</div>
+                    <div className="text-2xl font-mono text-blue-400">₹500</div>
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <button className="bg-blue-500 text-white font-bold text-xl py-4 px-12 rounded-full hover:scale-105 transition-transform flex items-center gap-3">
+                  <CircleDot size={20} /> Pay via UPI Circle
+                </button>
+              </motion.div>
             )}
 
           </AnimatePresence>

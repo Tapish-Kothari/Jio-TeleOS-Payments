@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step } from '@/lib/scenarios';
-import { Check, ShieldCheck, X, MapPin, ShoppingCart } from 'lucide-react';
+import { Check, ShieldCheck, X, MapPin, ShoppingCart, CircleDot } from 'lucide-react';
 
 interface PhoneFrameProps {
   step: Step;
@@ -380,6 +380,48 @@ export default function PhoneFrame({ step, onNewCardMethodSelect, onAction }: Ph
                   </button>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {/* UPI CIRCLE NOTIFY STATE */}
+          {phoneState === 'upi_circle_notify' && (
+            <motion.div
+              key="upi_circle_notify"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 flex flex-col bg-[#090C15]"
+            >
+              {/* Lock screen background */}
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-6xl font-light text-white/90 mb-2">10:42</div>
+                  <div className="text-white/50 text-lg">Tuesday, October 15</div>
+                </div>
+              </div>
+
+              {/* Sliding notification */}
+              <motion.div
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3, type: 'spring', damping: 20 }}
+                className="absolute top-14 left-4 right-4 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-lg"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center">
+                      <CircleDot size={14} className="text-white" />
+                    </div>
+                    <span className="text-white/80 text-sm font-medium">UPI Circle</span>
+                  </div>
+                  <span className="text-white/40 text-xs">now</span>
+                </div>
+                <h3 className="text-white font-semibold mb-1">{phoneContent?.title}</h3>
+                <p className="text-white/70 text-sm">{phoneContent?.subtitle}</p>
+              </motion.div>
+
+              {/* Home indicator */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-white/20 rounded-full" />
             </motion.div>
           )}
 

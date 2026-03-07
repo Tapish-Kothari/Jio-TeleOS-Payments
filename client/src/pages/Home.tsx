@@ -214,6 +214,19 @@ export default function Home() {
                   onClick={() => !aiPhase && handleNext()}
                   onMethodSelect={setSelectedPaymentMethod}
                   selectedMethod={selectedPaymentMethod}
+                  paymentMethods={
+                    activeScenarioId === 'gaming' ? [
+                      { id: 'upi', icon: Icons.QrCode, label: 'UPI / Scan QR' },
+                      { id: 'lite', icon: Icons.Zap, label: 'UPI Lite — Instant, No PIN' },
+                      { id: 'wallet', icon: Icons.Wallet, label: 'JioPay Wallet' },
+                      { id: 'postpaid', icon: Icons.Smartphone, label: 'Jio Postpaid Billing' },
+                    ] :
+                    activeScenarioId === 'family-auth' ? [
+                      { id: 'upi', icon: Icons.QrCode, label: 'Pay via UPI (Phone)' },
+                      { id: 'circle', icon: Icons.CircleDot, label: 'UPI Circle — No PIN, Auto-debit' },
+                    ] :
+                    undefined
+                  }
                   aiPhase={aiPhase}
                   onAITrigger={handleAITrigger}
                   onAIDismiss={handleAIDismiss}

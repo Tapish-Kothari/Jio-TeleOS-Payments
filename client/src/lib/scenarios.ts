@@ -11,7 +11,10 @@ export type TVState =
   | 'wallet_confirm'
   | 'postpaid_confirm'
   | 'saved_card_confirm'
-  | 'qr_code_new_card';
+  | 'qr_code_new_card'
+  | 'recharge_plan'
+  | 'upi_lite_balance'
+  | 'upi_circle_limit';
 
 export type PhoneState =
   | 'idle'
@@ -23,7 +26,8 @@ export type PhoneState =
   | 'add_card_options'
   | 'add_card_tap'
   | 'add_card_manual'
-  | 'jiomart_cart';
+  | 'jiomart_cart'
+  | 'upi_circle_notify';
 
 export interface Step {
   tvState: TVState;
@@ -157,6 +161,23 @@ export const GAMING_BRANCHES: Record<string, Step[]> = {
     { tvState: 'success', phoneState: 'success', tvContent: { title: 'Top-up Successful', subtitle: '500 JioCoins added' } },
   ],
   new_card: OTT_BRANCHES.new_card,
+  lite: [
+    { tvState: 'upi_lite_balance', phoneState: 'idle', tvContent: { title: 'Pay ₹50 with UPI Lite', subtitle: 'No PIN needed · Instant debit from on-device wallet', price: '₹340' } },
+    { tvState: 'success', phoneState: 'idle', tvContent: { title: '₹50 Paid Instantly', subtitle: '500 JioCoins added · UPI Lite Balance: ₹290' } },
+  ],
+};
+
+export const FAMILY_BRANCHES: Record<string, Step[]> = {
+  upi: [
+    { tvState: 'qr_code', phoneState: 'idle', tvContent: { title: 'Scan to Pay ₹499', subtitle: 'Open any UPI app on your phone' }, handoffActive: true },
+    { tvState: 'waiting', phoneState: 'upi_pin', phoneContent: { amount: '₹499' }, handoffActive: true },
+    { tvState: 'success', phoneState: 'success', tvContent: { title: 'Purchase Approved', subtitle: 'Downloading Minecraft...' } },
+  ],
+  circle: [
+    { tvState: 'upi_circle_limit', phoneState: 'idle', tvContent: { title: 'Pay via UPI Circle', subtitle: 'Monthly limit set by Dad · Remaining: ₹499', price: '₹499' } },
+    { tvState: 'waiting', phoneState: 'idle', tvContent: { title: 'Processing...', subtitle: 'Deducting from UPI Circle delegation' } },
+    { tvState: 'success', phoneState: 'upi_circle_notify', tvContent: { title: 'Purchase Approved!', subtitle: 'Minecraft downloading · Circle limit used: ₹499' }, phoneContent: { title: 'UPI Circle Alert', subtitle: '₹499 spent by Aarav · Minecraft · Remaining: ₹0 of ₹500' } },
+  ],
 };
 
 export const TCOMMERCE_BRANCHES: Record<string, Step[]> = {
@@ -208,8 +229,9 @@ export const BRANCHES: Record<string, { baseCount: number; methods: Record<strin
   'ott-sub': { baseCount: 3, methods: OTT_BRANCHES },
   'ipl-live': { baseCount: 3, methods: IPL_BRANCHES },
   'jiosaavn': { baseCount: 2, methods: SAAVN_BRANCHES },
-  'mobile-recharge': { baseCount: 2, methods: RECHARGE_BRANCHES },
+  'mobile-recharge': { baseCount: 3, methods: RECHARGE_BRANCHES },
   'gaming': { baseCount: 3, methods: GAMING_BRANCHES },
+  'family-auth': { baseCount: 4, methods: FAMILY_BRANCHES },
   't-commerce': { baseCount: 3, methods: TCOMMERCE_BRANCHES },
   'sub-hub': { baseCount: 3, methods: SUBHUB_BRANCHES },
 };
@@ -253,8 +275,7 @@ export const SCENARIOS: Scenario[] = [
       { tvState: 'paywall', phoneState: 'idle', tvContent: { title: 'Minecraft (Kids Profile)', subtitle: 'Buy Full Game', price: '₹499' } },
       { tvState: 'waiting', phoneState: 'idle', tvContent: { title: 'Asking for Permission', subtitle: 'A request has been sent to the family manager.' }, handoffActive: true },
       { tvState: 'waiting', phoneState: 'family_auth', phoneContent: { title: 'Purchase Request', subtitle: 'Aarav wants to buy Minecraft', amount: '₹499' } },
-      { tvState: 'waiting', phoneState: 'upi_pin', phoneContent: { amount: '₹499' } },
-      { tvState: 'success', phoneState: 'success', tvContent: { title: 'Purchase Approved', subtitle: 'Downloading Minecraft...' } },
+      { tvState: 'payment_methods', phoneState: 'idle', tvContent: { title: 'Parent Approved!', subtitle: 'Choose how Aarav pays for Minecraft', price: '₹499' } },
     ]
   },
   {
@@ -292,7 +313,8 @@ export const SCENARIOS: Scenario[] = [
     icon: 'Smartphone',
     steps: [
       { tvState: 'recharge_select', phoneState: 'idle', tvContent: { title: 'Recharge Mobile', subtitle: 'Select a saved number' } },
-      { tvState: 'payment_methods', phoneState: 'idle', tvContent: { title: 'Popular Plans', subtitle: 'For +91 98765 43210', price: '₹299' } },
+      { tvState: 'recharge_plan', phoneState: 'idle', tvContent: { title: 'Choose a Plan', subtitle: 'For +91 98765 43210 (Mom)' } },
+      { tvState: 'payment_methods', phoneState: 'idle', tvContent: { title: 'Pay for Recharge', subtitle: 'For +91 98765 43210', price: '₹299' } },
     ]
   }
 ];
